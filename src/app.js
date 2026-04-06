@@ -7,10 +7,12 @@ app.get('/user', (_req, res)=>{
     'firstName': 'kavi'
   })
 })
-app.get("/a", (_req, res)=> {
-  console.log(_req.query);
-  res.send("helllooooo kaviii");
-});
+app.get("/a", [(_req, res, next)=> {
+  res.send('hey kavi')
+   next();
+}, (_req, res)=>{
+  res.send('im here kavi');
+}]);
 
 app.get('/:file{.:ext}', async (req, res) => {
   res.send('ok')
