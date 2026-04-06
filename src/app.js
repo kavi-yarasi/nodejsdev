@@ -7,22 +7,15 @@ app.get('/user', (_req, res)=>{
     'firstName': 'kavi'
   })
 })
-app.get('/hello', (_req, res)=> {
+app.get("/a", (_req, res)=> {
+  console.log(_req.query);
   res.send("helllooooo kaviii");
 });
 
-app.post('/postuser', (_req, res)=>{
-  res.send('posting user');
-});
-
-app.delete('/deletinguser', (_req, res)=>{
-  res.send('deleting user');
+app.get('/:file{.:ext}', async (req, res) => {
+  res.send('ok')
 })
 
-app.patch('/patchinguser', (_req, res) => {
-  res.send('patching user');
+app.listen(7777, ()=>{
+  console.log('server is listening on port 7777')
 })
-
-app.listen(7777, () => {
-  console.log('server listening on the port number 7777')
-});
