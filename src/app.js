@@ -1,11 +1,28 @@
-const expreses = require('express');
+const express = require('express');
 
-const app = expreses();
+const app = express();
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.get('/user', (_req, res)=>{
+  res.send ({
+    'firstName': 'kavi'
+  })
+})
+app.get('/hello', (_req, res)=> {
+  res.send("helllooooo kaviii");
 });
 
-app.use('/test', (req, res, next) => {
-  res.send('Hello kavi'); //request handler
+app.post('/postuser', (_req, res)=>{
+  res.send('posting user');
+});
+
+app.delete('/deletinguser', (_req, res)=>{
+  res.send('deleting user');
+})
+
+app.patch('/patchinguser', (_req, res) => {
+  res.send('patching user');
+})
+
+app.listen(7777, () => {
+  console.log('server listening on the port number 7777')
 });
