@@ -2,7 +2,13 @@ const express = require('express');
 
 const app = express();
 
+const {adminAuth} = require("./middlewares/auth");
 
+app.use("/admin", adminAuth);
+
+app.get("/admin/dashboard", (_req, res, next)=> {
+  res.send('ADMIN DASHBOARD ACCESSED');
+})
 //wHENEVER the express server gets a request, it will go through alll this , will send the response of first matching one, then it won't execute.
 
 //ROUTE HANDLERS that are only WITH THE NEXT KEYWORD WITHOUT SENDING ANY RESPONSE ARE - MIDDLEWARES
