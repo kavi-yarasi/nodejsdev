@@ -5,7 +5,7 @@ const app = express();
 
 //wHENEVER the express server gets a request, it will go through alll this , will send the response of first matching one, then it won't execute.
 
-//ROUTE HANDLERS - MIDDLEWARES
+//ROUTE HANDLERS that are only WITH THE NEXT KEYWORD WITHOUT SENDING ANY RESPONSE ARE - MIDDLEWARES
 app.get('/user', (_req, res)=>{
   res.send ({
     'firstName': 'kavi'
