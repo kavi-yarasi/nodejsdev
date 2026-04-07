@@ -2,10 +2,18 @@ const express = require('express');
 
 const app = express();
 
-const {adminAuth} = require("./middlewares/auth");
+const {adminAuth, userAuth} = require("./middlewares/auth");
 
 app.use("/admin", adminAuth);
 
+app.get("/user/login", (_req, res, next) => 
+{
+  res.send("user logged innn");
+})
+///AUTHORIZATION ENABLED ONLY FOR DASHBOARD, NOT FOR LOGIN ABOVE
+app.get("/user/dashboard", userAuth, (_req, res, next)=> {
+  res.send("USER DASHBOARD ACCESSED");
+})
 app.get("/admin/dashboard", (_req, res, next)=> {
   res.send('ADMIN DASHBOARD ACCESSED');
 })
