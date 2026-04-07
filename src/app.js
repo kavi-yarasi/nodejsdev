@@ -6,8 +6,10 @@ const {adminAuth, userAuth} = require("./middlewares/auth");
 
 app.use("/admin", adminAuth);
 
-app.get("/user/login", (_req, res, next) => 
+app.get("/user/login", (_req, res, next) =>
 {
+  throw new Error("this is wrong bro");
+  
   res.send("user logged innn");
 })
 ///AUTHORIZATION ENABLED ONLY FOR DASHBOARD, NOT FOR LOGIN ABOVE
@@ -48,6 +50,12 @@ app.get("/routing", (_req, res, next)=>{
 // app.get('/:file{.:ext}', async (req, res) => {
 //   res.send('ok')
 // })
+
+//ERROR HANDLER SHOULD BE DEFINED AFTER ALL ROUTES, AND IT SHOULD HAVE 4 PARAMS (err, req, res, next)
+app.use((err, req, res, next)=>{
+  console.log(err);
+  res.status(500).send("Something went wrong");
+})
 
 app.listen(7777, ()=>{
   console.log('server is listening on port 7777')
