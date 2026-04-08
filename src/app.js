@@ -4,6 +4,8 @@ const app = express();
 
 const db = require("./config/database.js");
 
+app.use(express.json()); //for the reqbody to be converted to the actual JSON
+
 const User = require("./models/user.js");
 
 db().then(()=> {
@@ -20,13 +22,8 @@ db().then(()=> {
 })
 
 app.post("/signup", async (req, res)=>{
-  const userObj = {
-    "firstName": "Kavi", 
-    "lastName": "Arasi",
-    "age": 25,
-    "gender": "female"
-  }
-  const user = new User(userObj); //creating a new INSTANCE OF THE USER MODEL
+
+  const user = new User(req.body); //creating a new INSTANCE OF THE USER MODEL
 
   try {
     await user.save(); //saving the model, THIS SHOULD BE AWAITED BECAUSE IT WILL ALWAYS RETURN A PROMISE
@@ -38,6 +35,60 @@ app.post("/signup", async (req, res)=>{
   }
   
 })
+
+//getUserByanyTHING
+
+app.get("/user", async (req, res)=>{
+  console.log(req.body);
+  
+  const userFirstName = req.body.firstName;
+  try{
+    const user = await User.findOne({firstName: userFirstName});
+    console.log(user, 'founduser');
+    
+     if(user)
+  {
+    console.log("user found successfully");
+    res.send(user);
+    
+  }
+  else{
+    console.log('USER NOT FOUND');
+    res.status(404).send("USER NOT FOUND")
+    
+  }
+  }
+  catch{
+   res.status(400).send("SOMETHING WENG WRONG");
+    
+
+  }
+
+
+})
+
+//feedapi
+
+app.get("/feed", async (req, res) =>{
+  try{
+    const users = await User.find({});
+    console.log(users);
+    console.log("Feed loaded");
+    
+  //    if(users.length)
+  // {
+    res.send(users);
+    
+  // }
+  }
+  catch{
+   res.status(400).send("SOMETHING WENG WRONG");
+    
+
+  }
+
+})
+
 
 
 
