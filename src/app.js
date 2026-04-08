@@ -4,6 +4,8 @@ const app = express();
 
 const db = require("./config/database.js");
 
+const User = require("./models/user.js");
+
 db().then(()=> {
   app.listen(7777, ()=>{
   console.log('server is listening on port 7777')
@@ -16,6 +18,28 @@ db().then(()=> {
     console.log("datatabase couldn't be connected");
     
 })
+
+app.post("/signup", async (req, res)=>{
+  const userObj = {
+    "firstName": "Kavi", 
+    "lastName": "Arasi",
+    "age": 25,
+    "gender": "female"
+  }
+  const user = new User(userObj); //creating a new INSTANCE OF THE USER MODEL
+
+  try {
+    await user.save(); //saving the model, THIS SHOULD BE AWAITED BECAUSE IT WILL ALWAYS RETURN A PROMISE
+
+  res.send("User added successfully");
+    
+  } catch (error) {
+    res.status(400).send("Error saving the response");
+  }
+  
+})
+
+
 
 // const {adminAuth, userAuth} = require("./middlewares/auth");
 
