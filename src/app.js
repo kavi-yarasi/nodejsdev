@@ -104,10 +104,25 @@ app.get("/feed", async (req, res) =>{
     
 
   }
-
 })
 
+//patchUser
 
+app.patch("/user", async(req, res)=> {
+  console.log(req.body);
+  
+  const id = req.body.userId;
+  try {
+     const user = await User.findByIdAndUpdate({_id: id}, req.body);
+  if(user)
+  {
+    res.send("USER UPDATED")
+
+  }
+  } catch (error) {
+    res.status(400).send("something went wrong");
+  }
+})
 
 
 // const {adminAuth, userAuth} = require("./middlewares/auth");
