@@ -67,6 +67,24 @@ app.get("/user", async (req, res)=>{
 
 })
 
+//deleteApi
+app.delete("/user", async (req, res)=>{
+  console.log(req.body);
+  
+  try {
+    const userId = req.body.userId;
+    console.log(userId);
+    
+    const userDeleted = await User.findByIdAndDelete(userId);
+    if(userDeleted)
+    {
+      res.send("user deleted successfully")
+    }
+  } catch (error) {
+    res.status(400).send("something went wrong");
+  }
+})
+
 //feedapi
 
 app.get("/feed", async (req, res) =>{
