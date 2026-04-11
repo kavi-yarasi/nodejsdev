@@ -108,11 +108,28 @@ app.get("/feed", async (req, res) =>{
 
 //patchUser
 
-app.patch("/user", async(req, res)=> {
+app.patch("/user/:userId", async(req, res)=> {
   console.log(req.body);
+
+  const ALLOWED_UPDATE_FIELDS = ["gender", "age", "skills", "password"]
+
   
-  const id = req.body.userId;
+  const id = req.params?.userId;
   try {
+    if(req.body)
+  {
+    const isAllowed = Object.keys(req.body).every(v => ALLOWED_UPDATE_FIELDS.includes(v));
+    if(!isAllowed)
+    {
+      throw new Error("updating these fields are not allowed");
+    }
+  }
+
+  if(req.body.skills?.length > 10)
+  {
+    throw new Error("skills cannot be more than 10");
+  }
+  
      const user = await User.findByIdAndUpdate({_id: id}, req.body);
   if(user)
   {
@@ -120,7 +137,7 @@ app.patch("/user", async(req, res)=> {
 
   }
   } catch (error) {
-    res.status(400).send("something went wrong");
+    res.status(400).send("something went wrong" + error);
   }
 })
 

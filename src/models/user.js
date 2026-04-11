@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema({
     firstName:{
         type: 'String', //String or 'String' are same
         required: true,
-        minLength: 2,
+        minLength: [2, 'Must be at least 2'],
         maxLength: 5
     },
     lastName:{
@@ -18,11 +18,17 @@ const userSchema = new mongoose.Schema({
         trim: true
     },
     password:{
-        type: String
+        type: String,
+        validate: {
+      validator: function(v) {
+        return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v);
+      },
+      message: props => `${props.value} is not a valid password`
+    },
     },
     age:{
         type: Number,
-        min: 18
+        min: [18, 'Must be at least 18, got {VALUE}']
     },
     gender:{
         type: String,
@@ -35,7 +41,9 @@ const userSchema = new mongoose.Schema({
     },
     about:{
         type: String, 
-        default: "THIS IS A SAMPLE ABOUT"
+        default: "THIS IS A SAMPLE ABOUT",
+        minLength: 5,
+        maxLength: 1000
     },
     skills:{
        type: [String]
