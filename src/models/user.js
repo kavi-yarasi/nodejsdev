@@ -2,8 +2,10 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
     firstName:{
-        type: String,
-        required: true
+        type: 'String', //String or 'String' are same
+        required: true,
+        minLength: 2,
+        maxLength: 5
     },
     lastName:{
         type: String,
@@ -11,16 +13,25 @@ const userSchema = new mongoose.Schema({
     emailId:{
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        loweracase: true, 
+        trim: true
     },
     password:{
         type: String
     },
     age:{
-        type: Number
+        type: Number,
+        min: 18
     },
     gender:{
-        type: String
+        type: String,
+        validate: {
+      validator: function(v) {
+        return ["male", "female", "other"].includes(v);
+      },
+      message: props => `${props.value} is not a gender`
+    },
     },
     about:{
         type: String, 
@@ -29,6 +40,8 @@ const userSchema = new mongoose.Schema({
     skills:{
        type: [String]
     }
+}, { 
+  timestamps: true 
 })
 
 const User = mongoose.model("User", userSchema);
