@@ -55,6 +55,15 @@ const userSchema = new mongoose.Schema({
     },
     skills:{
        type: [String]
+    },
+    photoUrl:{
+        type: String,
+        default: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600w-418179865.jpg",
+        validate: {
+          validator: function(v) {
+            return validator.isURL(v);
+          }
+        }
     }
 }, { 
   timestamps: true 
