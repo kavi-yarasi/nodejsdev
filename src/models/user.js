@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema({
     firstName:{
@@ -19,9 +20,9 @@ const userSchema = new mongoose.Schema({
         validate: {
             validator: function(v)
             {
-               return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(v);
+               return validator.isEmail(v);
             },
-            message: "{VALUE} is not a valid email ID"
+            message: "{VALUE} is not a valid email ID FROM SCHEMA"
         }
     },
     password:{

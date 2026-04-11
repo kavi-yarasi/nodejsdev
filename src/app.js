@@ -1,4 +1,5 @@
 const express = require('express');
+const validator = require('validator');
 
 const app = express();
 
@@ -26,6 +27,14 @@ app.post("/signup", async (req, res)=>{
   const user = new User(req.body); //creating a new INSTANCE OF THE USER MODEL
 
   try {
+    if(req.body.emailId)
+    {
+      const isValidEmail = validator.isEmail(req.body.emailId);
+      if(!isValidEmail)
+      {
+        throw new Error("not a valid email")
+      }
+    }
     await user.save(); //saving the model, THIS SHOULD BE AWAITED BECAUSE IT WILL ALWAYS RETURN A PROMISE
 
   res.send("User added successfully");

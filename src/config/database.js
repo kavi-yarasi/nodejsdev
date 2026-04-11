@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const connectDB = async () => {
-    await mongoose.connect("mongodb+srv://lkaviyarasik4_db_user:14jiS1GZCEgOAAyd@kaviscluster.uf2jwci.mongodb.net/devTinder?appName=kaviscluster");
 
     //database and cluster name with string
 }
