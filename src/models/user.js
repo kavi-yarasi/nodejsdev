@@ -27,12 +27,10 @@ const userSchema = new mongoose.Schema({
     },
     password:{
         type: String,
-        validate: {
-      validator: function(v) {
-        return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v);
-      },
-      message: props => `${props.value} is not a valid password`
-    },
+        validate: function(v)
+        {
+            return validator.isStrongPassword(v);
+        },
     },
     age:{
         type: Number,
