@@ -1,5 +1,7 @@
 const express = require('express');
 const validator = require('validator');
+const {validateSignUpdata} = require("./utlis/validation.js");
+const bcrypt = require("bcrypt");
 
 const app = express();
 
@@ -24,17 +26,22 @@ db().then(()=> {
 
 app.post("/signup", async (req, res)=>{
 
-  const user = new User(req.body); //creating a new INSTANCE OF THE USER MODEL
+  
 
+  const {firstName, lastName, emailId, password} = req.body;
+  console.log(password, 'password')
+  const passwordHash = await bcrypt.hash(password, 10); //10 rounds of salt
+
+  const user = new User({
+  firstName,
+  lastName,
+  emailId,
+  password: passwordHash
+}); //creating a new INSTANCE OF THE USER MODEL
+
+  console.log(passwordHash);
   try {
-    if(req.body.emailId)
-    {
-      const isValidEmail = validator.isEmail(req.body.emailId);
-      if(!isValidEmail)
-      {
-        throw new Error("not a valid email")
-      }
-    }
+    validateSignUpdata(req);
     await user.save(); //saving the model, THIS SHOULD BE AWAITED BECAUSE IT WILL ALWAYS RETURN A PROMISE
 
   res.send("User added successfully");
