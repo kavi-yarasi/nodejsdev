@@ -24,10 +24,32 @@ db().then(()=> {
     
 })
 
-app.post("/signup", async (req, res)=>{
+//login api
 
+app.post("/login", async (req, res)=> {
+
+  const {emailId, password} = req.body;
+
+  const user = await User.findOne({emailId: emailId});
   
+  if(!user)
+  {
+    throw new Error("email is not found, please signup");
+  }
 
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+
+  if(isPasswordValid)
+  {
+    res.send("User logged in successfully");
+  }
+  else{
+
+    throw new Error("Password is not valid");
+  }
+})
+
+app.post("/signup", async (req, res)=>{
   const {firstName, lastName, emailId, password} = req.body;
   console.log(password, 'password')
   const passwordHash = await bcrypt.hash(password, 10); //10 rounds of salt
@@ -39,7 +61,6 @@ app.post("/signup", async (req, res)=>{
   password: passwordHash
 }); //creating a new INSTANCE OF THE USER MODEL
 
-  console.log(passwordHash);
   try {
     validateSignUpdata(req);
     await user.save(); //saving the model, THIS SHOULD BE AWAITED BECAUSE IT WILL ALWAYS RETURN A PROMISE
@@ -55,8 +76,6 @@ app.post("/signup", async (req, res)=>{
 //getUserByanyTHING
 
 app.get("/user", async (req, res)=>{
-  console.log(req.body);
-  
   const userFirstName = req.body.firstName;
   try{
     const user = await User.findOne({firstName: userFirstName});
