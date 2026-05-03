@@ -31,10 +31,10 @@ app.post("/login", async (req, res)=> {
   const {emailId, password} = req.body;
 
   const user = await User.findOne({emailId: emailId});
-  
+
   if(!user)
   {
-    throw new Error("email is not found, please signup");
+    throw new Error("Invalid credentials");
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -45,7 +45,7 @@ app.post("/login", async (req, res)=> {
   }
   else{
 
-    throw new Error("Password is not valid");
+    throw new Error("Invalid credentials");
   }
 })
 
