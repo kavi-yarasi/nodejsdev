@@ -2,12 +2,16 @@ const express = require('express');
 const validator = require('validator');
 const {validateSignUpdata} = require("./utlis/validation.js");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const {userAuth} = require("./middlewares/auth.js")
+const jwt = require("jsonwebtoken");
 
 const app = express();
 
 const db = require("./config/database.js");
 
 app.use(express.json()); //for the reqbody to be converted to the actual JSON
+app.use(cookieParser());
 
 const User = require("./models/user.js");
 
@@ -41,12 +45,21 @@ app.post("/login", async (req, res)=> {
 
   if(isPasswordValid)
   {
+    const token = await jwt.sign({_id: user._id}, "DEV@TINDER"); //mongo id is what we are hiding inside the token
+    console.log(token);
+    res.cookie("token", token);
     res.send("User logged in successfully");
   }
   else{
 
     throw new Error("Invalid credentials");
   }
+})
+
+//profile api
+app.get("/profile", userAuth, async (req, res)=> {
+  console.log("Logged in user" + req.user);
+  res.send(req.user);
 })
 
 app.post("/signup", async (req, res)=>{

@@ -1,30 +1,32 @@
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
 
-const adminAuth = (_req, res, next)=>{
-    console.log("AUTHORIZATION INITIATED")
-    const token = "xyx";
-    const isAuthorizationTokenValid = token === "xyz";
+const userAuth = async (req, res, next)=>{
+    try{
+    const {token} = req.cookies;
 
-    if(isAuthorizationTokenValid)
+    const decodedObj = await jwt.verify(token, "DEV@TINDER");
+
+    const {_id} = decodedObj;
+    console.log(_id, 'id')
+
+    const user = await User.findById({_id});
+    
+    console.log(user, 'user');
+
+    if(!user)
     {
-        next();
+        throw new Error("User NOT FOUND");
     }
-    else{
-        res.status(401).send("Authorization failed");
-    }
+
+    req.user = user;
+
+    next();
+}
+catch(ERROR)
+{
+    res.status(400).send("ERROR" + ERROR.message);
+}
 }
 
-const userAuth = (_req, res, next)=>{
-    console.log("USER AUTHORIZATION INITIATED")
-    const token = "xyz";
-    const isAuthorizationTokenValid = token === "xyz";
-
-    if(isAuthorizationTokenValid)
-    {
-        next();
-    }
-    else{
-        res.status(401).send("Authorization failed");
-    }
-}
-
-module.exports = { adminAuth, userAuth };
+module.exports = { userAuth };
