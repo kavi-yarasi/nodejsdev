@@ -45,9 +45,11 @@ app.post("/login", async (req, res)=> {
 
   if(isPasswordValid)
   {
-    const token = await jwt.sign({_id: user._id}, "DEV@TINDER"); //mongo id is what we are hiding inside the token
+    const token = await jwt.sign({_id: user._id}, "DEV@TINDER", {
+      expiresIn: "1d"
+    }); //mongo id is what we are hiding inside the token
     console.log(token);
-    res.cookie("token", token);
+    res.cookie("token", token, {expires: new Date(Date.now() + 3600000), httpOnly: true});
     res.send("User logged in successfully");
   }
   else{
@@ -60,6 +62,10 @@ app.post("/login", async (req, res)=> {
 app.get("/profile", userAuth, async (req, res)=> {
   console.log("Logged in user" + req.user);
   res.send(req.user);
+})
+
+app.post("sendConnectionRequest", userAuth, async(req, res)=>{
+  res.send(req.user.firstName + " sent the connection request");
 })
 
 app.post("/signup", async (req, res)=>{
