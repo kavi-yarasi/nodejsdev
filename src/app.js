@@ -41,13 +41,11 @@ app.post("/login", async (req, res)=> {
     throw new Error("Invalid credentials");
   }
 
-  const isPasswordValid = await bcrypt.compare(password, user.password);
+  const isPasswordValid = await user.validatePassword(password);
 
   if(isPasswordValid)
   {
-    const token = await jwt.sign({_id: user._id}, "DEV@TINDER", {
-      expiresIn: "1d"
-    }); //mongo id is what we are hiding inside the token
+    const token = await user.getJwt();
     console.log(token);
     res.cookie("token", token, {expires: new Date(Date.now() + 3600000), httpOnly: true});
     res.send("User logged in successfully");
